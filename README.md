@@ -1,4 +1,4 @@
-##JeongWook-Study
+##
 ### 1day 1commit start date 
 #### 2020 - 12 - 20
 
