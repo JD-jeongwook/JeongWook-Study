@@ -1,0 +1,46 @@
+자바 코드저장 폴더 구분
+ - src (source) : 소스코드를 보관하는 폴더이다.
+ - bin (binary) : 컴파일 결과를 보관하는 폴더이다.
+
+자바는 클래스와 파일의 이름이 같아야한다.
+
+Editor does not contain a main type 오류
+ 원인 ) java파일이 src 폴더 안에 들어가지 않았을 때, java파일을 인식할 수 없기 때문에 발생하는 오류이다.
+ 해결방법 ) 1 . src 폴더 안에 java파일을 넣어준다.
+	  2. proeject 우클릭 - properties - build path에서 소스코드를 저장할 폴더 src를 삭제하고 프로젝트로 재지정해준다.
+
+Compile : 소스코드를 컴퓨터가 이해할 수 있게 전환하는 작업
+
+자바의 흐름
+   .java 파일 ---- Compile ----> .class 파일 ---- Run ----> Java Virtual Machine ---- Run ----> Computer
+
+.java 파일을 저장하면 .class파일로 컴파일된다. 이것을 Run으로 동작하면 Java Virtual Machine을 통해 Computer로 동작이된다.
+
+JAVA로 이런것도 할수있다. ( 유튜브 '생활코딩' )
+     - 데스크 탑 앱만들기
+	import javax.swing.*;   
+	import java.awt.Dimension;
+	import java.awt.Toolkit;
+	public class HelloWorldGUIApp{
+	    public static void main(String[] args){
+	        javax.swing.SwingUtilities.invokeLater(new Runnable() {
+	            public void run() {
+	                JFrame frame = new JFrame("HelloWorld GUI"); // 띄울 창의 이름?을 지정하는 것 같다.
+	                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	                // 위의 코드를 입력해주지않으면 우리 눈에는 창이 꺼진것처럼 보이지만 JVM에는 그대로 남아있게된다.
+	                
+	                frame.setPreferredSize(new Dimension(400, 300)); // 띄울 창의 크기를 지정하는 것 같다.
+	                JLabel label = new JLabel("Hello World!!", SwingConstants.CENTER); // "Hello World!!" 라는 글씨가 입력될 위치를 나타낸다.
+	                frame.getContentPane().add(label); // getContentPane() : Jframe에 컴포넌트를 붙이는 방식. / 위에 입력한 label을 frame에 입력해주었다.
+	                Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+	                frame.setLocation(dim.width/2-400/2, dim.height/2-300/2); // 스크린이 보여질 위치를 지정해준다.
+	
+	                frame.pack(); // 컴포넌트의 크기를 부모에 맞게 자동으로 맞춰준다. 위에서 지정해줌.
+	                frame.setVisible(true); // frame을 보여줄지 true/false로 결정한다. false 거나 이 메소드가 없으면 창은 보여지지않는다.
+	            }
+	        });
+	    }
+	}
+
+     - 사물인터넷( IOT ) 제어
+     - 안드로이드 앱 만들기
