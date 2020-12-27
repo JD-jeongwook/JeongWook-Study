@@ -1,0 +1,36 @@
+유튜브 내힘으로 컴파일 강의 1~5
+
+이클립스없이 자바를 실행하는법
+
+1. java 확장자가 붙은 소스코드를 class 확장자가 붙은 실행파일로 변경한다 Compile
+2. class 확장자가 붙은 파일을 실행한다. Run
+3. 실행할때 입력값을 준다 Input
+
+* window 기준
+CMD ( 명령 프롬프트 )
+Javac 를 통해 Compile을 한다.
+
+Program Files - Java - jdk1.8.0_251 ( jdk란 Java SE Development Kits의 약자이다. ) - bin ( binary의 줄임말, 실행파일 ) - 안에 Java와 Javac 등등이 있다.
+
+CMD에서 컴파일 하기위해서는 java파일이 있는 경로가 필요하다.
+입력창에 ( cd 폴더경로 ) 를 입력하면 해당 폴더가 경로가된다.
+dir을 입력하면 해당경로가 출력이 된다.
+
+ - CMD Compile
+    javac 클래스이름.java 을 하면 컴파일이되어 클래스이름.class 가 생긴다
+
+ - CMD Run
+    java 클래스이름 을 입력하면 해당 클래스가 main메소드부터 실행이된다.
+
+CMD에서 Complie을 했을때 같은 프로젝트에 있는 필요한 패키지 내에 클래스들( import 돼있는것 )을 모두 Complie해준다.
+
+classpath : 우리가 컴파일할 클래스들의 위치를 알려주는것. CMD 명령어 -cp ".;lib" == 해당 클래스가 lib밑에 있다는것을알려준다.    . 을 붙이지 않는다면  lib밑에 있는것만 찾는다.
+ex ) javac -cp ".;lib" 클래스.java
+
+Library : 다른사람이 만든 사용할 수 있도록 잘 정리된 프로그램들
+
+CMD로 Input 하는방법
+ - java 클래스이름Input " args 에 넣어주고싶은값 " " 더 있다면 추가 " 이런 식으로 넣어준다.
+
+유튜브보면서 강의 따라치고싶었지만.. 노트북에서 txt파일을 java파일로 변환하는법을 몰라서 강의만 들었다.
+알아봐야겠다.
