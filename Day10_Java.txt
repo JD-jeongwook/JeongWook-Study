@@ -1,0 +1,60 @@
+유튜브 강의 - 나의 앱 만들기
+
+ 3명의 투자자 ( 5 : 3 : 2 )가 만드는데 3천원의 비용이 발생하는 물건을 부가가치세 1000원을 포함한 11000원에 판매하려고 하는 상황을 코딩해보자.
+
+public class AccountingApp {
+
+	public static void main(String[] args) {
+		
+		System.out.println("Value of supply : " + 10000.0); // 공급가
+		System.out.println("VAT : " + (10000.0 * 0.1)); // 부가가치세 ( 10% 로 설정 )
+		System.out.println("Total : " + (10000.0 + 10000.0 * 0.1)); // 부가가치세를 포함한 소비자가 내야할 금액		
+		System.out.println("Expense : "+ (10000.0*0.3)); // 제품을 만드는데 사용한 금액
+		System.out.println("Income : "+ (10000.0 - 10000.0*0.3)); // 나의 순이익
+		System.out.println("1st Dividend : " + (10000.0 - 10000.0*0.3) * 0.5 ); // 1번 투자자 : 배당금 5할을 가져온다.
+		System.out.println("2nd Dividend : " + (10000.0 - 10000.0*0.3) * 0.3 ); // 2번 투자자 : 배당금 3할을 가져온다.
+		System.out.println("3th Dividend : " + (10000.0 - 10000.0*0.3) * 0.2 ); // 3번 투자자 : 배당금 2할을 가져온다.
+	}
+}
+
+유튜브를 보고 그대로 따라했지만, 10000.0 보다 double money = 10000.0 변수를 하나 추가해서 그 변수를 기준으로 변수들을 추가하는게 더 좋아보인다.
+
+원하는 값에 변수를 지정하는것을 배워봤다. 
+원하는 값 드래그 - 마우스 우클릭 - Refactor - Extract Local Variable ( 단축키 : Alt + Shift + L ) 을 하고 이름을 정해주면 그 값을 해당 변수로 생성해준다. 
+ * preview를 눌렀을때 해당값과 뜻은 다르고 값만 같은것도 일괄적으로 바뀔 수 있기때문에 그러한 것들은 직접 변수설정을 해준다
+처음 알았는데 엄청 좋은기능같다.
+
+public class AccountingApp {
+
+	public static void main(String[] args) {
+		
+		double valueOfSupply = 10000.0;
+		double expenseRate = 0.3;
+		double vatRate = 0.1;
+		double vat = valueOfSupply * vatRate;
+		double total = valueOfSupply + vat;
+		double expense = valueOfSupply*expenseRate;
+		double income = valueOfSupply - expense;
+		double dividend1 = (valueOfSupply - valueOfSupply*expenseRate) * 0.5;
+		double dividend2 = (valueOfSupply - valueOfSupply*expenseRate) * 0.3;
+		double dividend3 = (valueOfSupply - valueOfSupply*expenseRate) * 0.2;
+		
+		System.out.println("Value of supply : " + valueOfSupply);
+		System.out.println("VAT : " + vat); 
+		System.out.println("Total : " + total); 	
+		System.out.println("Expense : "+ expense);
+		System.out.println("Income : "+ income); 
+		System.out.println("Dividend 1 : " + dividend1 );
+		System.out.println("Dividend 2 : " + dividend2 );
+		System.out.println("Dividend 3 : " + dividend3 );
+	}
+}
+
+Extract Local Variable기능을 통해서 변수를 지정해주었다.
+데이터가 바뀌어도 코드가 바뀌지않는 프로그램이 좋은 프로그램이다.
+
+프로젝트 우클릭 -> properties -> 경로탐색
+
+Launch4j 를 통해 내가만든 어플리케이션을 jar 파일로 만들 수 있다.
+
+유튜브 댓글을 보면 사람들이 적은 코드들을 많이 볼 수 있는데 저번에 배운 JOptionPane.showInputDialog를 통해서 사용자가 직접 가격,수익배분율을 적을 수 있게 짠 코드도 있었다. 댓글을 보는것도 좋은것같다.
