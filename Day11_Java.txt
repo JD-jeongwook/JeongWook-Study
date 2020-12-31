@@ -1,0 +1,187 @@
+유튜브 강의 - 나의 앱 만들기2
+
+저번시간에 만든 수익분배앱을 응용해서 더욱 좋은 프로그램을 만들어 보자.
+
+ ( if ~ else 문 사용 )
+
+	만약 수익이 10000원 미만이면 dividend1이 모두 갖는다.
+
+public class AccountingIfApp {
+
+	public static void main(String[] args) {
+		
+		double valueOfSupply = Double.parseDouble(args[1]);
+		// args라는 배열의 첫번째 값에 20000.0 이 들어가있다.
+		// args의 자료형은 String이기때문에 Double형으로 바꿔주기위해 Double.parseDouble을 통해 String to Double을 해준다.
+		
+		double expenseRate = 0.3;
+		double vatRate = 0.1;
+		double vat = valueOfSupply * vatRate;
+		double total = valueOfSupply + vat;
+		double expense = valueOfSupply*expenseRate;
+		double income = valueOfSupply - expense;
+		
+		double dividend1;
+		double dividend2;
+		double dividend3;
+		
+		if(income > 10000) { // 만약 income 즉 수익이 10000원 이상이면 5:3:2 로 나눠갖는다.
+			dividend1 = income * 0.5;
+			dividend2 = income * 0.3;
+			dividend3 = income * 0.2;
+		} else { // 그렇지 않다면, devidend1이 모두 갖는다.
+			dividend1 = income * 1;
+			dividend2 = income * 0;
+			dividend3 = income * 0;
+		}
+		
+		System.out.println("Value of supply : " + valueOfSupply);
+		System.out.println("VAT : " + vat); 
+		System.out.println("Total : " + total); 	
+		System.out.println("Expense : "+ expense);
+		System.out.println("Income : "+ income); 
+		System.out.println("Dividend 1 : " + dividend1 );
+		System.out.println("Dividend 2 : " + dividend2 );
+		System.out.println("Dividend 3 : " + dividend3 );
+		
+	}
+}
+
+ ( 배열의 사용 )
+
+	수익분배율을 배열에 넣어주어서 변수정리를 깔끔히 해준다.
+
+public class AccountingArrayApp {
+
+	public static void main(String[] args) {
+		
+		double valueOfSupply = Double.parseDouble(args[0]);
+		// args라는 배열의 첫번째 값에 20000.0 이 들어가있다.
+		// args의 자료형은 String이기때문에 Double형으로 바꿔주기위해 Double.parseDouble을 통해 String to Double을 해준다.
+		
+		double expenseRate = 0.3;
+		double vatRate = 0.1;
+		double vat = valueOfSupply * vatRate;
+		double total = valueOfSupply + vat;
+		double expense = valueOfSupply*expenseRate;
+		double income = valueOfSupply - expense;
+		
+		double[] dividendRates = new double[3];
+		// 자료형이 double인 값을 3개 넣을 수 있는 변수 dividendRates를 만들었다. ( 배열 )
+		// 서로 연관된 데이터를 정리정돈하는 방법이다.
+		// 메인메소드의 매개변수인 String[] args 도 마찬가지로 변수이다.
+		
+		dividendRates[0] = 0.5;
+		// 배열의 첫번째는 1이아닌, 0부터 시작한다. 중요하다.
+		dividendRates[1] = 0.3;
+		dividendRates[2] = 0.2;
+		
+		double dividend1 = income * dividendRates[0];
+		double dividend2 = income * dividendRates[1];
+		double dividend3 = income * dividendRates[2];
+		
+		System.out.println("Value of supply : " + valueOfSupply);
+		System.out.println("VAT : " + vat); 
+		System.out.println("Total : " + total); 	
+		System.out.println("Expense : "+ expense);
+		System.out.println("Income : "+ income); 
+		System.out.println("Dividend 1 : " + dividend1 );
+		System.out.println("Dividend 2 : " + dividend2 );
+		System.out.println("Dividend 3 : " + dividend3 );
+		
+	}
+}
+
+ ( 반복문 )
+
+
+public class AccountingArrayLoopApp {
+
+	public static void main(String[] args) {
+		
+		double valueOfSupply = Double.parseDouble(args[0]);
+		
+		double expenseRate = 0.3;
+		double vatRate = 0.1;
+		double vat = valueOfSupply * vatRate;
+		double total = valueOfSupply + vat;
+		double expense = valueOfSupply*expenseRate;
+		double income = valueOfSupply - expense;
+
+		System.out.println("Value of supply : " + valueOfSupply);
+		System.out.println("VAT : " + vat); 
+		System.out.println("Total : " + total); 	
+		System.out.println("Expense : "+ expense);
+		System.out.println("Income : "+ income); 
+		
+		double[] dividendRates = new double[3];
+		// dividend의 수가 많으면 많아질 수록 수익률 분배를 하나하나 적는다면, 너무 많은 시간을 낭비하게 될것이다.
+		// 반복되는 일을 도와주는것이 바로 반복문이다.
+		
+		dividendRates[0] = 0.5;
+		dividendRates[1] = 0.3;
+		dividendRates[2] = 0.2;
+		
+//		int i = 0;
+//		while( i < dividendRates.length) {
+//			System.out.println("Dividend" + (i+1) + " : " + income * dividendRates[i] );
+//			i = i + 1;
+//		}
+// 반복문을 통해서 3번 출력을 해야하는것을 한번의 출력을 반복시키면서 사용할 수 있다. 반복해야하는 작업의 수가 높아질수록 효율이 좋아진다.
+		
+		for(int i=0; i<dividendRates.length; i++) {
+			System.out.println("Dividend" + (i+1) + " : " + income * dividendRates[i] );
+		}
+		//  for 문에 대한 설명은 없어서 넣어봤다.
+	}
+}
+
+( 메소드 )
+ 메소드란 ? 서로 연관된 코드를 그루핑해서 이름을 붙혀서 정리정돈된 공간이다.
+
+
+public class AccountingMethodApp {
+	static double valueOfSupply = 10000.0;
+	
+	public static void main(String[] args) {
+		double expenseRate = 0.3;
+		double vatRate = 0.1;
+		double vat = getVAT(vatRate);
+		double total = valueOfSupply + vat;
+		double expense = getVAT(expenseRate);
+//		Method를 만들식을 드래그 후 마우스우클릭 -> Refactor -> Extract Method 를 하게되면
+//		내가 정해준 이름으로 Method를 만들 수 있다.
+//		getVAT라는 메소드에 위에서 가져온 valueOfSupply,vatRate를 매개변수로 보내줘서 해당 메소드를 실행시킨다.
+//		만약 valueOfSupply라는 값을 직접 보내주고싶지않으면, method내에서 만 쓰이는 지역변수가 아닌
+//		메소드 밖에 변수를 지정해줘서 클래스 내에서 사용할 수 있는 전역변수로 만들어준다.
+//		valueOfSupply만 전역변수로 변경해보겠다.
+		
+		double income = getIncome(expense);
+//		다른 공식들도 모두 메소드로 바꿀 수 있다. 굳이 Refactor를 통하지않아도 직접 만들 수 있다.
+		
+		double dividend1 = income * 0.5;
+		double dividend2 = income * 0.3;
+		double dividend3 = income * 0.2;
+		
+		System.out.println("Value of supply : " + valueOfSupply);
+		System.out.println("VAT : " + vat); 
+		System.out.println("Total : " + total); 	
+		System.out.println("Expense : "+ expense);
+		System.out.println("Income : "+ income); 
+		System.out.println("Dividend 1 : " + dividend1 );
+		System.out.println("Dividend 2 : " + dividend2 );
+		System.out.println("Dividend 3 : " + dividend3 );
+	}
+
+	public static double getVAT(double vatRate) {
+		return valueOfSupply * vatRate;
+		// 위에서 받아온 vatRate와 전역변수 valueOfSupply를 통해 식을 실행하고, 그 값을 return을 통해서 해당 메소드를 호출한곳으로 되돌려준다.
+	}
+	
+	public static double getIncome(double expense) {
+		return valueOfSupply - expense;
+	}
+}
+
+만약 위의 소스에서 변수를 모두 전역변수로 만들어주고, 모든 식을 메소드로 변환하고, 출력을 위한 메소드를 따로 만든다면 더욱 더 깔끔한 소스가 될 수 있다. 주석의 설명을 위해 바꾸진않았다.
+
