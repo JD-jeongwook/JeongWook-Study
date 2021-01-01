@@ -1,0 +1,122 @@
+유튜브 강의 - 나의 앱 만들기3
+
+ ( 클래스 ) : 서로 연관된 변수와 메소드를 하나로 묶고, 이름을 지어준 것이다.
+
+class Accounting {
+	public static double valueOfSupply;
+	public static double vatRate;
+	public static double expenseRate;
+	
+	public static void print() {
+		System.out.println("Value of supply : " + valueOfSupply);
+		System.out.println("VAT : " + getVAT()); 
+		System.out.println("Total : " + getTotal()); 	
+		System.out.println("Expense : "+ getExpense());
+		System.out.println("Income : "+ getIncome()); 
+		System.out.println("Dividend 1 : " + getDividend1() );
+		System.out.println("Dividend 2 : " + getDividend2() );
+		System.out.println("Dividend 3 : " + getDividend3() );
+	}
+	public static double getDividend1() {
+		return getIncome() * 0.5;
+	}
+	public static double getDividend2() {
+		return getIncome() * 0.3;
+	}
+	public static double getDividend3() {
+		return getIncome() * 0.2;
+	}
+	public static double getVAT() {
+		return valueOfSupply * vatRate;
+	}
+	public static double getIncome() {
+		return valueOfSupply - getExpense();
+	}
+	public static double getExpense() {
+		return valueOfSupply * expenseRate;
+	}
+	public static double getTotal() {
+		return valueOfSupply + getVAT();
+	}
+}
+
+public class AccountingClassApp {
+	public static void main(String[] args) {
+		Accounting.valueOfSupply = 10000.0;
+		Accounting.vatRate = 0.1;
+		Accounting.expenseRate = 0.3;
+		Accounting.print();
+		// 기존에 AccountingClassApp 에있던 메소드들을 Accounting 클래스로 옮겨주었다.
+		// 클래스.메소드(변수)는 다른 클래스의 메소드(변수)를 가져온다는 것이다.
+		// 객체지향의 특징
+		// 클래스 하나를 자바파일 하나에 몰아넣는것은 좋지않다.
+	}
+
+}
+
+( 인스턴스 ) : 하나의 클래스를 복사해서 서로다른 데이터의 값과 서로 같은 메소드를 가진 복사본을 만드는것이다.
+
+class Accounting {
+	public double valueOfSupply;
+	public double vatRate;
+	public double expenseRate;
+	
+	public void print() {
+		System.out.println("Value of supply : " + valueOfSupply);
+		System.out.println("VAT : " + getVAT()); 
+		System.out.println("Total : " + getTotal()); 	
+		System.out.println("Expense : "+ getExpense());
+		System.out.println("Income : "+ getIncome()); 
+		System.out.println("Dividend 1 : " + getDividend1() );
+		System.out.println("Dividend 2 : " + getDividend2() );
+		System.out.println("Dividend 3 : " + getDividend3() );
+	}
+	public double getDividend1() {
+		return getIncome() * 0.5;
+	}
+	public double getDividend2() {
+		return getIncome() * 0.3;
+	}
+	public double getDividend3() {
+		return getIncome() * 0.2;
+	}
+	public double getVAT() {
+		return valueOfSupply * vatRate;
+	}
+	public double getIncome() {
+		return valueOfSupply - getExpense();
+	}
+	public double getExpense() {
+		return valueOfSupply * expenseRate;
+	}
+	public double getTotal() {
+		return valueOfSupply + getVAT();
+	}
+}
+
+public class AccountingClassApp {
+	public static void main(String[] args) {
+//		Accounting.valueOfSupply = 10000.0;
+//		Accounting.vatRate = 0.1;
+//		Accounting.expenseRate = 0.3;
+//		// 만약 Accounting 작업을 여러번하다가
+//		// 중간에 변수값이 다른 작업이 한번 들어오고 다시 원래의 값으로 작업하고싶다면,
+//		// 변수값을 바꾼다음 다시 원래값으로 변경해야하는 번거로움도 있고, 데이터의 충돌을 일으킬수있다. 그래서 인스턴스를 사용하려고한다.
+//		Accounting.print();
+		Accounting a1 = new Accounting();
+		Accounting a2 = new Accounting();
+		
+		System.out.println("=== Accounting 1 ===");
+		a1.valueOfSupply = 10000.0;
+		a1.vatRate = 0.1;
+		a1.expenseRate = 0.3;
+		a1.print();
+		System.out.println("=== Accounting 2 ===");
+		a2.valueOfSupply = 20000.0;
+		a2.vatRate = 0.05;
+		a2.expenseRate = 0.2;
+		a2.print();
+		// 이렇게 인스턴스를 사용해서 하나의 클래스를 복사해서 나눠준다면
+		// 다시 a1이라는 인스턴스를 사용할때 변수지정을 다시 해주지않아도 된다.
+	}
+}
