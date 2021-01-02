@@ -1,0 +1,30 @@
+스프링 프레임워크 강의 
+1강
+
+Java EE ( Java Platform, Enterprise Edition 의 줄인말 ) 
+( 분산형 , 기업형 응용 프로그램 , 개발을 위한 API , 결합력을 낮추는 DI, DB Transaction 처리 , 로그 처리... )
+ --> 모든 기능을 Spring으로 대체 가능해졌다.
+
+Java SE ( Java Platform, Standard Edition 의 약자 )
+( 일반적인 로컬 응용 프로그램 , 개발을 위한 API , 파일 I/O , 콘솔 I/O , 윈도우 I/O , 네트워크 I/O , Thread... )
+
+앞으로 배울것 : MVC - DI , 트랜잭션 - AOP , 인증과 권한 - Servlet Filter
+
+2강 - 느슨한 결합력과 인터페이스
+
+UI  -  Service  -  Dao      
+	S  ---  A1 ---  A
+	   l
+	   ---  B1 --- B
+
+이런식으로 Dao에서 여러개의 클래스를 가져오는것보단
+
+UI  -  Service  - <interface>Dao 
+	S --- A
+	  l
+	  --- B
+
+그렇게 하면, 인스턴스를 생성하는소스가
+private B1 b1 = new B1();	--- > private B b1 = new B1();   service.setB(b1)
+private B2 b2 = new B2();	--- > private B b2 = new B2();   service.setB(b2)
+객체 생성과 조립을 위한 스프링이 제공하는 외부설정( XML,Annotation )을 통해 변할수있다.
