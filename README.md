@@ -8,7 +8,7 @@
     * [코드로 배우는 스프링 웹 프로젝트(개정판)](https://book.naver.com/bookdb/book_detail.nhn?bid=13993776)
   * 유튜브
     * [생활코딩 유튜브](https://www.youtube.com/user/egoing2)
-    * [뉴렉처 ](https://www.youtube.com/user/newlec1)
+    * [뉴렉처 유튜브](https://www.youtube.com/user/newlec1)
 ------------------------
 
 Day | 날짜 | 요일 | 내용 |
