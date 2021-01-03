@@ -1,0 +1,54 @@
+유튜브 강의 3강 ( DI )
+
+DI ( Dependency Injection 의 약자 ) 부품조립의 개념
+
+class A ( 일체형 )			class A ( 조립형 )	
+{				{
+	private B b;			private B b;
+				
+	public A() {			public void setB(B b) [
+	      b = new B();			      this.b = b;
+	}				}
+}				{
+일체형보단 조립형이 결합력이 낮아지고, 부품을 쉽게 갈아끼울수있다.
+일반적으로는 조립형을 사용한다.
+A 의 부품이 B이다. 그 부품을 setB라는 메소드로 조립을 해준다.
+부품 - Dependency		조립 - Injection 이라고 생각하면 편하다.
+
+Setter Injection ( setter 메소드를 이용한 조립방법 )
+   ex ) 
+	B b = new B();
+	A a = new A();
+	a.setB(b);
+
+Construction Injection ( 생성자를 이용한 조립방법 )
+   ex )
+	B b = new B();
+	A a = new A(b);
+원하는 부품과 어떠한 부품결합을 원하는지만 입력하면, 스프링에서 조립을 해준다.
+그 조립과정을 DI 라고한다. 객체를 조립하는데 필요한것은 Ioc Container이다.
+
+유튜브 강의 4강 ( IoC Container )
+
+여러가지 부품( Dependency )을 담고있는 컨테이너를 Ioc Container 라고한다.
+Dependency Container 라고 부르지않고 , Ioc Container 라고 부르는 이유는,
+위에 일체형 클래스는 보통 큰거 ---> 작은거 순서대로 생성이된다.
+하지만 Ioc Container를 통하면 Ioc ( Inversion of Control / 역순 ) 으로 생성이된다.
+Dependency를 역순으로 조립해준다.
+
+유튜브 Maven 강의 1강
+
+Maven 이란 ? 
+ - Build 할때 사용하는 도구이다.
+ - 프로젝트 생성 - 라이브러리 설정 - 코드 작업 - 컴파일 - 테스트 - 패키지 만들기 - 배포 - 레포팅 / 이 Build과정이다.
+ - 이러한 과정에서 반복되는 작업들을 효율적으로 도와주는 도구가 Maven이다.
+ - Eclipse , Visual Studio Code는 Build 툴이 아니다. ( IDE이다. )
+
+이클립스가 제공하지 않는 Maven만의 기능 
+ - 프로젝트 생성 : 사용자 정의 프로젝트
+ - 라이브러리 설정 : 라이브러리 관리와 의존성 체크
+ - 배포 : 라이브러리 저장소 활용
+
+유튜브 Maven 강의 2강 - 메이븐 설치하기
+
+유튜브를 통해 메이븐을 설치하고, Path 설정을 해주었다.
