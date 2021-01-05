@@ -1,0 +1,44 @@
+유튜브 강의 8강 웹 프로젝트로 변경
+
+pom.xml에서 <packaging>설정을 jar --> war로 변경해주고 Update project를 해주면 webapp폴더가 생기면서 웹 프로젝트로 변경된다
+
+그렇게 되면 pom.xml에 오류가 뜨는데
+web.xml is missing ans <failOnMissingWebXml> is set to true 라는 오류이다.
+이것은 web.xml을 찾을 수 없다는것인데, failOnMissingWebXml을 설정해주던가, web.xml을 추가해야한다.
+web.xml을 추가하는방법
+
+webapp 폴더 안에 WEB-INF 폴더를 생성하고, 설치되어있는 톰캣 폴더로 가서 webapps --> ROOT --> WEB-INF 안에 있는 web.xml파일을 복사해서 아까 만들어준 WEB-INF 폴더에 넣어준다.
+
+그렇게 되면 웹 프로젝트로 변경이 된것이다.
+// test HTML 파일을 만들었는데, 내가 미리 톰캣설정을 해놔서 그런지, 유튜브가 작년거라 그런지 약간 다르다. HTML을 실행하는데는 문제가 없었다.
+
+유튜브 강의 9강 서블릿/JSP 라이브러리 설정하기
+
+저번에 만들어준 project에 JSP파일을 하나 만들어주면
+The superclass "javax.servlet.http.HttpServlet" was not found on the Java Build Path 라는 오류가 뜨는데,
+이것은 위에 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>를 실행하는데 HttpServlet클래스를 찾을 수 없다는 것이다. 이 클래스를 사용하기 위해서는 해당 라이브러리를 찾아야한다.
+
+프로젝트 우클릭 --> Build Path --> Configure Build Path... --> Library선택
+
+해당프로젝트에 원하는 라이브러리 설정이 가능하다. 현재 JavaSE-1.8 과 Maven Dependency가 있다.
+라이브러리를 추가하기위해서는 pom.xml파일에서 dependencies 안에 dependency ( 부품,라이브러리 ) 를 추가해준다.
+그러면 메이븐이 해당 라이브러리를 알아서 다운로드 받아준다.
+
+메이븐의 라이브러리를 모아두는 사이트
+https://search.maven.org/ 유튜브 추천사이트
+https://mvnrepository.com/  okky에서 질문해서 얻은 사이트
+해당 사이트에서 jsp를 검색해서 jsp api를 가져와주자. 만약 jsp 버전을 모르겠다면 jsp tomcat을 검색해서 자신의 tomcat버전에 맞는 해당 api를 가져오는것도 하나의 방법이다.
+
+jar파일로 직접 받는 방법도 있지만 maven을 사용하고 있기때문에 코드를 복사해서 pom.xml에 dependency를 추가해준다. 마찬가지로 Update Project를 해준다.
+해당 dependency가 잘 들어갔나 보는방법은
+C:\Users\rkdwj\.m2\repository\org\apache\tomcat
+C드라이브 --> 사용자 --> 사용자선택 --> .m2 폴더 --> repository 폴더 --> org폴더 --> apache폴더 --> tomcat 이 있으면 해당 dependency가 잘 추가된것이다.
+<dependency>
+    <groupId>org.apache.tomcat</groupId> << repository에 들어가는 폴더이름
+				         만약<groupId>test.abc.java</groupId>라는 그룹이라면,
+				         org폴더가아닌, test폴더 밑에 생길것이다.
+    <artifactId>tomcat-jsp-api</artifactId>
+    <version>9.0.38</version>
+</dependency>
+
+확인하는 다른방법은 해당 프로젝트 pom.xml 밑에 선택창에 있는 Dependencies / Dependency Hierarchy 를 클릭해보는것이다.
