@@ -1,0 +1,104 @@
+유튜브 강의 10강 - 라이브러리 오류 문제
+
+만약 jar파일 안에 class가 깨지게되면 해당 dependency기능이 실행이 되지 않는다. 그런데 어디에서 오류가 난지 모를때가 있다.
+그런 경우에 사용자 --> .m2 --> repository폴더 안에 모든 폴더를 삭제하고 Eclipse를 재실행 하게되면
+jar파일을 모두 다시 다운로드 받는다. 만약 Java Resources 폴더에 ! 표시가 뜨면 라이브러리가 없다는것이다.
+jar파일을 모두 다운받게되면, 느낌표가 사라지게 된다.
+
+유튜브 강의 11강 - 라이브러리 인덱스 검색
+
+pom.xml의 UI를 통해 라이브러리 추가할 수 있다.
+매번 maven 사이트에 가서 검색을 한 후 복사를 해오면 불편함이 있을것같다.
+그럴때 pom.xml의 Dependencies에서 add 를 통해 원하는 dependency를 가져올 수 있다고 한다.
+저번에도 공부하다가 본 내용인데. okky에서는 dependencies에서 add를 하는것은 좋지 않으니까
+maven사이트를 사용하라고 하는데 어떤게 좋은건지는 잘 모르겠다. 편한건 pom.xml에서 찾는거 같다.
+
+유튜브 강의 12강 - 내가 만든 라이브러리 설치하기
+
+package com.kang.examlib.entity;
+
+public class Exam {
+	private int kor;
+	private int eng;
+	private int math;
+	
+	public int total() {
+		return kor + eng + math;
+	}
+	public float avg() {
+		return total()/3.0f;
+	}
+	
+	public Exam(int kor, int eng, int math) {
+		super();
+		this.kor = kor;
+		this.eng = eng;
+		this.math = math;
+	}
+
+	public int getKor() {
+		return kor;
+	}
+
+	public void setKor(int kor) {
+		this.kor = kor;
+	}
+
+	public int getEng() {
+		return eng;
+	}
+
+	public void setEng(int eng) {
+		this.eng = eng;
+	}
+
+	public int getMath() {
+		return math;
+	}
+
+	public void setMath(int math) {
+		this.math = math;
+	}
+
+	@Override
+	public String toString() {
+		return "Exam [kor=" + kor + ", eng=" + eng + ", math=" + math + "]";
+	}
+	
+}
+라는 간단한 3가지 과목의 점수와 평균을 구하는 프로젝트를 만들었다.
+
+그 후에 프로젝트 우클릭 --> Run As 를 하면 Maven의 단계가 나온다. --> 6 Maven Install 을 누른다.
+
+그러면 repository --> .m2 에 내가 정해준 패키지 안으로 해당 프로젝트(jar파일) 이 생성이 된다.
+
+다른 프로젝트에 적용하는 방법은
+Maven Repositories에 central이 아닌, Local Repository 우클릭 --> Rebuild Index를 적용해주면 Local Repository에 생성이 된다.
+사용할 프로젝트 우클릭 --> Maven --> Add Dependency --> 내가 만든 프로젝트이름 을 검색을 하게되면 해당 프로젝트가 나타난다.
+
+package com.newlecture;
+
+import com.kang.examlib.entity.Exam;
+
+/**
+ * Hello world!
+ *
+ */
+public class App 
+{
+    public static void main( String[] args )
+    {
+        System.out.println( "Hello Eclipse Maven!" );
+        Exam exam = new Exam(60,70,80);
+        System.out.println(exam.total());
+        System.out.println(exam.avg());
+        System.out.println(exam.toString());
+    }
+}
+------ 결과 -----
+Hello Eclipse Maven!
+210
+70.0
+Exam [kor=60, eng=70, math=80]
+
+해당 프로젝트가 다른 프로젝트에 잘 들어간것을 알 수 있다.
