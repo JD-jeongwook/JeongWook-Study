@@ -1,0 +1,72 @@
+유튜브 강의 5강 - Dependency를 직접 Injection 하기
+
+package spring.di;
+
+import spring.di.entity.Exam;
+import spring.di.entity.NewlecExam;
+import spring.di.ui.ExamConsole;
+import spring.di.ui.GridExamConsole;
+import spring.di.ui.InlineExamConsole;
+
+public class Program {
+
+	public static void main(String[] args) {
+		
+		Exam exam = new NewlecExam(); // Exam(인터페이스),NewlecExam(구현객체)
+//		4가지과목의 성적의 합계, 평균을 구할 수 있는 간단한 클래스
+		ExamConsole console = new InlineExamConsole(exam); // ExamConsole(인터페이스)
+//		Exam을 출력하는데 1줄로 출력하는 클래스	
+//		ExamConsole console = new GridExamConsole(exam);
+//		Exam을 출력하는데 Grid형으로 출력한다
+//		InlineExamConsole과 GridExamConsole이 exam을 조립해서 사용하고있다. 이 작업을 DI라고 한다.
+//		스프링의 도움을 받으면 위처럼 코드변경없이 부품을 변경할 수 있다.
+	
+		console.print();	
+	}
+}
+
+유튜브 강의 6강 - Spring DI를 위한 이클립스 플러그인 설치하기
+
+2019년 까진 실무에서 이클립스로 스프링을 쓰는일이 많다고 한다.
+Eclipse --> Help --> Eclipse MarketPlace --> Spring 을 다운로드 받는다.
+
+스프링을 사용할 프로젝트 패키지 우클릭 --> new --> other --> Spring Bean Configuration File으로 xml파일을 추가해준다.
+
+유튜브 강의 7강 - Spring DI 지시서 작성하기
+
+	- 메인 클래스
+	/* 스프링에게 지시하는 방법으로 코드를 변경
+	Exam exam = new NewlecExam(); 
+	ExamConsole console = new GridExamConsole();
+	NewlecExam,GridExamConsole 이란 2개의 부품을 생성했다. (Dependency)
+	
+	console.setExam(exam);
+	2개의 부품을 조립해주었다.(Injection)
+	만약 부품을 바꿔주게되면 결합방식도 바꿔줘야하기 때문에 코드를 전부 변경해주어야한다.
+	그래서 부품들을 설정으로 분류할것이다. 이를 돕기위한 것이 Spring이다.
+	
+	다음시간에 여기 메인클래스에서 xml파일에 지시서를 넘겨보자.
+	*/
+
+	- setting.xml파일
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!-- 스프링은 bean이라는 태그를 이용해서 생성할 객체를 지시해준다. -->
+	
+	<!-- Exam exam = new NewlecExam() -->
+	<bean id="exam" class="spring.di.entity.NewlecExam"/>
+	<!-- id에는 사용할 변수, class에는 사용할 class를 적어준다. 위에 주석과 같다. -->
+	<!-- class는 다른패키지에 같은 이름의 클래스가 존재할 수 있기때문에 패키지까지 입력해준다. -->
+	
+	<!-- ExamConsole console = new GridExamConsole -->
+	<bean id="console" class="spring.di.ui.GridExamConsole">
+		<!-- console.setExam(exam) -->
+		<property name="exam" ref="exam"/>
+		<!-- setExam함수를 호출한다. name의 exam이 setExam과 같다한다. 암묵적인 룰 같은데 자세히 이해는 안된다. -->
+		<!-- setExam메소드에 사용하는 매개변수가 value형이면 value,refference면 ref로 받아온다. 위의 exam은 class이기때문에 ref로 받아온다. -->
+	</bean>
+</beans>
+
