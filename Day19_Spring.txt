@@ -1,0 +1,54 @@
+유튜브 강의 8강 - Spring IoC 컨테이너 이용하기 ( ApplicationContext 이용하기 )
+
+ApplicationContext ( Interface ) : 스프링에서 DI 또는 지시서를 읽어서 생성해주고 조립해주는 스프링의 객체
+
+ApplicationContext의 클래스
+
+ClassPathXmlApplicationContext : 어플리케이션의 루트로부터 경로지정을 하고싶을때
+FileSystemXmlApplicationContext : 현재 파일시스템의 경로를 이용해서 루트로부터 써나아갔을때
+XmlWebApplicationContext : 웹의 url을 통해 지정할때
+AnnotationConfigApplicationContext : Annotation으로 지시사항을 쓸때
+
+ApplicationContext context = new ClassPathXmlApplicationContext("spring/di/setting.xml");
+로 setting.xml을 사용하고싶다면 Maven을 통해 Spring dependency를 가져와야한다.
+
+프로젝트 우클릭 --> Configure --> Convert to Maven Project
+그러면 pom.xml 파일이 생기고, Maven 기본설정이 돼있다.
+pom.xml에 springframework dependency를 추가해준다. Maven강의 참고
+springframework만 추가했지만, Dependency Hierarchy를 보면 springframework에 필요한 모든 dependency를 가져온다.
+
+그러면 위의 ApplicationContext 와 ClassPathXmlApplicationContext를 import 할 수 있다.
+
+ExamConsole console = (ExamConsole)context.getBean("console");
+
+위에서만든 context로 저번에 만든 setting.xml에 console이라는 이름을 가진 클래스를 가져온다.
+어떠한 객체인지 모르기때문에 Object형으로 나온다. 오류를 방지하기위해 ExamConsole로 형변환을 해주었다.
+
+또는 ExamConsole console = context.getBean(ExamConsole.class); 처럼
+setting.xml에서 ExamConsole의 클래스타입에 맞는것을 꺼내달라고 요청할 수 있다.
+이 방식이 context요청을 하는데 더 선호되는 방법이라고 한다.
+
+이 상태에서 console.print(); 를 하게되면 오류없이 잘 출력되는것을 알 수 있다.
+만약 setting.xml에서 console이라는 이름을 가진 클래스를 GridExamConsole에서 InlineExamConsole로 바꿔주면
+쉽게 변경이 되는것을 볼 수 있다. 부품 갈아끼기 하는거 같다.
+
+유튜브 강의 8강 - 값 형식 DI
+
+이번엔 클래스의 setter메소드로 값을 넣어주는것을 xml파일에서 넣어주는 방식을 배워본다한다.
+
+	<bean id="exam" class="spring.di.entity.NewlecExam">
+		
+		NewlecExam의 변수에 값을 지정해주는 방식은 밑의 2가지가있다.
+		
+		<property name="kor">
+			<value>10</value>
+		</property>
+		//<property name="kor" value="10"/>
+
+		<property name="eng" value="20"/>
+		<property name="math" value="30"/>
+		<property name="com" value="40"/>
+	</bean>
+
+setting.xml 파일에서 이렇게 NewlecExam의 변수에 값을 지정해주었다. 만약 클래스를 지정해주어야하면 ref로.
+값을 지정해주기위해선 NewlecExam 클래스 안에 setter메소드가 존재해야한다.
