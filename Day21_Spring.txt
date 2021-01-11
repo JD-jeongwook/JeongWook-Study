@@ -1,0 +1,55 @@
+유튜브 강의 11강 - 콜렉션 생성과 DI
+
+-- setting.xml
+
+	<!-- ArrayList클래스를 exams 라는 변수로 값을 넣어준다. -->
+	<bean id="exams" class="java.util.ArrayList">
+		<constructor-arg>
+			<list>
+				<!-- 배열에 값을 지정해주는 방법 -->
+				<!-- <bean class="spring.di.entity.NewlecExam" p:kor="10" p:eng="20" p:math="30" p:com="40" /> -->
+				<ref bean="exam"/>
+			</list>
+		</constructor-arg>
+	</bean>
+	
+	혹은 Namespace에 util을 선택해준다음
+	<util:list id="exams" list-class="java.util.ArrayList">
+		<!-- <bean class="spring.di.entity.NewlecExam" p:kor="10" p:eng="20" p:math="30" p:com="40" /> -->
+		<ref bean="exam"/>
+	</util:list>
+	처럼 util을 사용해줄수도있다.
+
+-- Program.java
+		List<Exam> exams = (List<Exam>) context.getBean("exams");//new ArrayList<>();
+		// xml파일에서 <bean id="exams" class="java.util.ArrayList"/> exams를 만들어준다.
+		exams.add(new NewlecExam(1,1,1,1));
+		
+		
+		for(Exam e : exams)
+			System.out.println(e);
+		// exams 배열에 속해있는 모든것을 출력한다.
+
+유튜브 강의 12강 - 어노테이션을 이용할 때의 장점과 @Autowired를 이용한 DI
+
+xml 파일에서는 객체를 바꾸게되면 설정도 바꿔주어야한다.
+하지만 어노테이션을 사용하게되면 객체를 바꾸면 자동으로 설정도 바뀌게 된다.
+보통 xml보다 어노테이션을 많이 사용한다고 한다.
+
+@Autowired는 기존 xml파일의 DI 부분을 클래스위에 사용해주면서 대체하게 해준다.
+자동으로 객체를 연결해달라고 요청하는것이다.
+
+	<bean id="console" class="spring.di.ui.InlineExamConsole">
+		<property name="exam" ref="exam"/>
+	</bean>
+
+--------------------------------- 위 아래는 같은 역할이다 ----------------------------------
+
+	@Autowired
+	@Override
+	public void setExam(Exam exam) {
+		this.exam = exam;
+	}
+하지만 그냥 이렇게 하면 nullpointexception오류가 뜰 것이다. 이것을 해결하기 위해선
+xml파일에서 <context:annotation-config/> 를 추가해줘서 빠져있는게 있다면 annotation( @ ) 에서 찾아보라는 명령이다.
+이것도 namespace가 안되서 할 수 없다.
