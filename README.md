@@ -35,6 +35,7 @@ Day 19 | 2021-01-09 | SAT | ApplicationContext 사용법과 DI로 값을 주는 
 Day 20 | 2021-01-10 | SUN | xml파일에서 생성자로 값을 주는법을 배웠다. |
 Day 21 | 2021-01-11 | MON | xml에서 List형식으로 값을 주는방법과 @Autowired를 조금 배웠다. |
 Day 22 | 2021-01-12 | TUE | @Autowired 의 위치 및 @Qualifier과 required옵션 사용법을 배웠다. |
+Day 23 | 2021-01-13 | WED | 어노테이션을 이용해 객체지정,value값 부여,@Component의 종류를 배웠다. |
 
 > 기초부터해서 도움이 안될까 걱정했는데 간간히 학원에서 배우지않은것도 알려주었다.
 
