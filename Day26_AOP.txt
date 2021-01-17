@@ -1,0 +1,144 @@
+유튜브 강의 2강 - AOP 구현방식 이해하기
+
+
+long start = System.currentTimeMillis();
+SimpleDataFormat dayTime = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
+String str = dayTime.format(new Date(start));
+System.out.println(str);
+
+long end = System.currentTimeMillis();
+String message=(end-start) + "ms가 걸림";
+System.out.println(message);
+
+위( Cross-cutting Concern )와 같이 해당 업무를 처리할때 걸리는 시간을 나타내는 소스코드를 
+아래코드( Core Concern 업무로직 )에 삽입하고싶다.
+
+public class NewlecExam implement Exam {
+	public int total() {
+		int result = kor + eng + math + com;
+
+		return result;
+	}
+}
+
+과거에는 업무 로직과 상관없는 다른 관점으로 만들어지는 코드들을 주업무로직에다 같이 넣어서 프로그래밍했었다.
+소스코드없이 업무로직에다가 다른관점으로 만들어지는 코드를 넣는방법이 AOP이다.
+
+프락시를 이용해서 코드를 꽂아넣는 방법이다.
+
+public static void main(String[] args) {
+	Exam exam = New NewlecCalculator();
+	Exam examProxy = (Exam) Proxy.newProxyInstance(
+	     NewlecExam.class.getClassLoader(),
+	     new Class[]{Exam.class},
+	     new InvocationHandler() {
+		@Override
+		public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+			long start = System.currentTimeMillis();
+			SimpleDataFormat dayTime = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
+			String str = dayTime.format(new Date(start));
+			System.out.println(str);
+			/*-------------------------------*/
+			Object result = method.invoke(exam, args);
+			/*-------------------------------*/
+			long end = System.currentTimeMillis();
+			String message=(end-start) + "ms가 걸림";
+			System.out.println(message);
+			return result;
+		}
+		int result = examProxy.total();
+		System.out.println("total is " + result);
+	     }
+}
+
+단순 자바를 이용하면 프락시의 코드 변경과 수정의 문제가 생길수도 있다. Spring DI로 해결이 가능하다.
+
+유튜브 강의 3강 - AOP 코드 구현하기
+
+package spring.aop;
+
+import spring.aop.entity.Exam;
+import spring.aop.entity.NewlecExam;
+
+public class Program {
+
+	public static void main(String[] args) {
+		Exam exam = new NewlecExam(1,1,1,1);
+		System.out.printf("total is %d\n", exam.total());
+//		여기까지는 이용자의 관점	
+	}
+}
+이 소스코드가 실행될 때 걸리는 시간을 출력하고싶다.
+AOP 적용을 하지 않았을때
+
+	@Override
+	public int total() {
+		long start = System.currentTimeMillis();
+		int result = kor+eng+math+com;
+		try {
+			Thread.sleep(200);
+			// 일부러 200ms만큼의 텀을 주었다.
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		long end = System.currentTimeMillis();
+		
+		String message = (end - start) + "ms 시간이 걸렸습니다.";
+		System.out.println(message);
+		return result;
+		// 개발자에게 필요한 관점. 프로그램이 동작하는데 걸리는 시간을 출력한다.
+	}
+
+곁다리 업무를 원래 업무로직과 결합시키기 위해선 반드시 프락시라는 도구가 필요하다.
+
+프락시를 이용해서 걸리는 시간을 출력할때.
+
+package spring.aop;
+
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+
+import spring.aop.entity.Exam;
+import spring.aop.entity.NewlecExam;
+
+public class Program {
+
+	public static void main(String[] args) {
+		
+		Exam exam = new NewlecExam(1,1,1,1);
+		
+//		Exam proxy = Proxy.newProxyInstance(loader, interfaces, h)
+//		loader는 사용할 클래스를 getClassLoader()메소드로 load를 하는부분.
+//		interfaces는 해당 클래스가 구현한 인터페이스들 복수형이기 때문에 배열로 넣어준다.
+//		h는 해당 클래스를 실행할때 사용할 겉다리 업무 인듯하다.
+		Exam proxy = (Exam) Proxy.newProxyInstance(NewlecExam.class.getClassLoader(), 
+				new Class[] {Exam.class},
+				new InvocationHandler() {
+					
+					@Override
+					public Object invoke(Object arg0, Method arg1, Object[] arg2) throws Throwable {
+						long start = System.currentTimeMillis();
+						
+						Object result = arg1.invoke(exam, arg2);
+						// 유튜브에는 Method 가 method라고 나와있는데 버전이 다른지 나는 arg1 로 나온다.
+						
+						long end = System.currentTimeMillis();
+						
+						String message = (end - start) + "ms 시간이 걸렸습니다.";
+						System.out.println(message);
+						
+						return result;
+					}
+				});
+				
+		
+		// interfaces에 따라 할당되는 인터페이스가 달라진다.
+		// proxy를 통해 곁다리 업무를 포함해서 exam의 업무를 사용한다.
+		
+		System.out.printf("total is %d\n", proxy.total());
+	}
+}
+
+실행 클래스가 아닌 Program 클래스에서 프록시를 만들어서 겉다리업무를 처리해주는 모습이다.
