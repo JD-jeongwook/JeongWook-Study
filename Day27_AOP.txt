@@ -1,0 +1,140 @@
+유튜브 강의 4강 - 스프링 AOP로 AroundAdvice 구현하기
+
+곁다리업무 중에서는 저번에 배운 프로그램을 실행하는데 걸리는 시간을 처리하는것 처럼 앞뒤로 실행하는 업무말고도,
+주업무 전,후,앞뒤,예외 처리하는것을 스프링에서 제공한다.
+각각 Before( 주업무 전 ),After returnning( 주업무 후 ), After throwing( 주업무 예외처리 ),Around( 주업무 전후 )라고 하고 그것들을 Advice라고 한다.
+
+스프링 AOP를 이용해서 
+
+public class Program {
+
+	public static void main(String[] args) {
+		
+		ApplicationContext context =
+//				new AnnotationConfigApplicationContext(NewlecDIConfig.class);
+				new ClassPathXmlApplicationContext("spring/aop/setting.xml");
+	
+		Exam exam = new NewlecExam(1,1,1,1);
+		Exam proxy = (Exam) Proxy.newProxyInstance(NewlecExam.class.getClassLoader(), 
+				new Class[] {Exam.class},
+				new InvocationHandler() {
+					
+					@Override
+					public Object invoke(Object arg0, Method arg1, Object[] arg2) throws Throwable {
+						long start = System.currentTimeMillis();
+						
+						Object result = arg1.invoke(exam, arg2);
+						
+						long end = System.currentTimeMillis();
+						
+						String message = (end - start) + "ms 시간이 걸렸습니다.";
+						System.out.println(message);
+						
+						return result;
+					}
+				});
+				
+		System.out.printf("total is %d\n", proxy.total());
+	}
+}
+위의 코드를 exam 객체를 생성하는 코드, 프록시를 생성하는 코드,곁다리 업무를 생성하는 코드 세가지로 나눠서
+각각 용도에 맞게 끼워넣을수있게 xml파일에 생성할 것이다.
+
+==================================================================
+
+프로그램을 실행하는 java파일
+
+public class Program {
+
+	public static void main(String[] args) {
+		
+		ApplicationContext context =
+//				new AnnotationConfigApplicationContext(NewlecDIConfig.class);
+				new ClassPathXmlApplicationContext("spring/aop/setting.xml");
+		Exam proxy = (Exam) context.getBean("proxy");
+		// xml 파일의 proxy라는 id를 가진 bean을 호출한다.
+		
+		System.out.printf("total is %d\n", proxy.total());
+	}
+}
+
+==================================================================
+
+exam객체와 프록시를 생성하는 xml파일
+
+	<bean id="target" class="spring.aop.entity.NewlecExam">
+		<property name="kor" value="1"/>
+		<property name="eng" value="1"/>
+		<property name="math" value="1"/>
+		<property name="com" value="1"/>
+	</bean>
+	<bean id="logAroundAdvice" class="spring.aop.advice.LogAroundAdvice"/>
+	<!-- 실질적인 곁다리 업무들의 코드를 넣는 클래스이다. -->
+	<bean id="exam" class="org.springframework.aop.framework.ProxyFactoryBean">
+	<!-- 프록시의 클래스는 헷갈릴 수 있기 때문에 java파일에서 Proxyfactorybean을 검색해서 가져왔다. -->
+		<property name="target" ref="target"/>
+		<!-- name은 setTarget메소드 이고, ref는 위에서 설정한 NewlectExam클래스의 이름 target이다. -->
+		<!-- 그냥 곁다리업무를 java코드에 작성해줄때는 인터페이스를 입력해줘야하지만, xml파일에서는 스프링이 알아서 해준다. -->
+		<property name="interceptorNames">
+			<list>
+				<value>logAroundAdvice</value>
+				<!-- 위에서 만든 logAroundAdvice라는 이름의 곁다리업무를 추가해주었다. 여러개 추가가능 -->
+			</list>
+		</property>
+		
+	</bean>
+
+==================================================================
+
+곁다리업무를 생성하는 java 파일
+
+public class LogAroundAdvice implements MethodInterceptor {
+// Around Advice를 구현할때 MethodInterceptor를 구현해야한다.
+
+	@Override
+	public Object invoke(MethodInvocation invocation) throws Throwable {
+		
+		long start = System.currentTimeMillis();
+		
+		Object result = invocation.proceed();
+		// 주업무를 호출해주는 중요한 역할을 한다.
+		
+		long end = System.currentTimeMillis();
+		String message = (end - start) + "ms 시간이 걸렸습니다.";
+		
+		System.out.println(message);
+		
+		return result;
+	}
+	
+}
+
+유튜브 강의 5강 - Before Advice 구현하기
+
+지난시간에 앞뒤로 실행되는 Around Advice를 구현했다. 오늘은 Before Advice를 구현해보겠다.
+
+먼저 곁다리업무 부분을 담당할 클래스를 하나 생성해준다.
+
+public class LogBeforeAdvice implements MethodBeforeAdvice {
+// Before advice를 구현할때 MethodBefore Advice를 구현한다.
+
+	@Override
+	public void before(Method method, Object[] args, Object target) throws Throwable {
+		System.out.println("앞에서 실행될 로직");
+	}
+}
+
+// around ( MethodIntorceptor ) 와 다르게 before는 MethodBeforeAdvice를 구현한다.
+
+그다음 xml파일에서
+<bean id="logBeforeAdvice" class="spring.aop.advice.LogBeforeAdvice"/>으로 곁다리 업무 bean을 하나 만들어준다.
+
+그리고 proxy부분의 interceptorNames에 list에 해당 bean을 추가해준다.
+<property name="interceptorNames">
+	<list>
+		<value>logAroundAdvice</value>
+		<value>logBeforeAdvice</value>
+	</list>
+</property>
+
+그리고 프로그램을 실행시키면 정상적으로 타겟의 메소드 앞부분마다 "앞에서 실행될 로직"이 출력되는것을 볼 수 있다.
