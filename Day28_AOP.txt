@@ -1,0 +1,95 @@
+유튜브 강의 6강 - After Returning / throwing 어드바이스 구현
+
+AfterReturningAdvice 함수 호출후에 일어나는 곁다리업무를 구현
+지난 시간과 마찬가지로
+LogAfterReturningAdvice 라는 곁다리업무 클래스를 만들어 준다.
+
+public class LogAfterReturningAdvice implements AfterReturningAdvice {
+	// 주업무 후에 사용되는 곁다리업무는 AfterReturningAdvice를 구현한다.
+	@Override
+	public void afterReturning(Object returnValue, Method method, Object[] args, Object target) throws Throwable {
+		System.out.println("returnValue:"+ returnValue + ", method:"+method.getName());
+		// AfterAdvice는 반환하는 값이 return 된 후 이기때문에 returnValue를 사용할 수 있다.
+		// 각각 주 업무의 return되는 value값, 호출한 주업무의 메소드이름을 출력한다.
+	}
+}
+
+그 다음 xml파일에서 지난시간과 마찬가지로 LogAfterReturningAdvice를 bean으로 생성해주고
+proxy에 value안에 만들어준 bean 아이디를 입력해준다.
+
+ThrowingAdvice 함수 호출시 예외처리 발생했을때 일어나는 곁다리 업무를 구현
+LogAfterThrowingAdvice라는 곁다리업무 클래스를 만들어 준다.
+
+public class LogAfterThrowingAdvice implements ThrowsAdvice {
+	// 주업무에 대한 예외처리를 하는 곁다리업무는 ThrowsAdvice를 구현한다.
+	// 어떠한 예외가 발생하냐에 따라 함수의 인자가 달라지기때문에 defaultmethod가 구현이돼있다.
+	
+	public void afterThowing(IllegalArgumentException e) throws Throwable {
+		// 주업무를 하다가 예외가 발생되면 다른 곁다리업무가 아닌, ThrowsAdvice  곁다리업무가 실행된다.
+		System.out.println("예외가 발생하였습니다.:" + e.getMessage());
+		// e.getMessage() 를 통해 어떠한 예외가 발생했는지 알 수 있다.
+	}
+}
+그리고 proxy에 해당하는 객체에다 예외 상황을 하나 주어줬다.
+
+	public int total() {	
+		int result = kor+eng+math+com;
+		
+		if(kor > 100)
+			throw new IllegalArgumentException("유효하지 않은 국어점수");
+			// total 함수를 호출할 때 만약 국어점수가 100점을 초과하면 해당 예외처리를 한다.
+
+		try {
+			Thread.sleep(200);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+그 후에 마찬지로 xml파일에 bean생성후, proxy에 추가해주면 객체에 국어점수에 100점을 초과한 점수를 줬을때
+예외가 발생하였습니다.:유효하지 않은 국어점수 를 출력하게 된다.
+객체에서 발생한 오류이기때문에 이전에 만들어두었던, Before, Around, AfterReturnning 중
+Before는 실행이 된다.
+
+유튜브 강의 7강 -  Point Cut ( Weaving, JoinPoint )
+
+곁다리업무를 주업무에 꽂아넣는 과정을 Weaving 이라고 한다.
+
+weaving 을 할때 곁다리업무가 대상으로 하고있는 메소드가 proxy에서 연결해야할 포인트, JoinPoint 라고 한다.
+
+Proxy가 타겟을 삼고잇으면 타겟의 모든 메소드를 JoingPoint라고 생각한다.
+그래서 타겟에 모든 메소드에 Weaving 작업이 일어나게된다.
+만약 하나의 메소드만 weaving이 되길 바라면 해당 메소드를 선택하는 별도의 정보를 PointCut이라고 한다.
+
+xml파일에서 pointcut을 지정해주는 방법을 알아보자.
+
+<bean id="classicPointCut" class="org.springframework.aop.support.NameMatchMethodPointcut">
+	<!-- NameMatchMethodPointcut의 이름을 보면 알수있듯이 Name을 기준으로 PointCut을 나눌것이다.-->
+	<property name="mappedName" value="total" />
+	<!-- value안에 weaving 이 가능한 함수를 지정해준다. -->
+</bean>
+
+<bean id="classBeforeAdvisor" class="org.springframework.aop.support.DefaultPointcutAdvisor">
+	<!-- advisor은 advice와 pointcut을 연결해주는 역할을 한다. -->
+		
+	<property name="advice" ref="logBeforeAdvice" />
+	<!-- advice( setAdvice함수이다. )에는 pointcut을 하고싶은 advice의 레퍼런스를 넣어준다. -->
+		
+	<property name="pointcut" ref="classicPointCut" />
+	<!-- pointcut( setPointcut함수이다. )에는 위에서 지정해준 pointcut하는 부분의 레퍼런스를 넣어준다. -->
+</bean>
+
+위 처럼 bean을 생성해서 BeforeAdvice에 대한 pointcut을 지정해주었다.
+그 다음 proxy에 지정된 beforeadvice를 다음과 같이 변경해준다.
+
+<value>logBeforeAdvice</value>  -->  <value>classBeforeAdvisor</value>
+
+그렇게 되면 Program.java에서
+proxy.total() 을 호출했을때와 proxy.avg()를 호출했을때
+total 함수 호출시에만 BeforeAdvice가 구현이 된다.
+다른 Advice에 Pointcut을 지정해주고싶으면 같은 방법으로 해주면된다.
+
+하지만 일일이 Advisor을 해준다면 불편함이 있다.
+이 방법은 구 방식이다. 다음시간에는 편하게 advisor를 사용하는 방법을 배운다.
