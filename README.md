@@ -40,6 +40,7 @@ Day 24 | 2021-01-15 | FRI | 오늘은 첫 면접을 통해 아쉬웠던 부분, 
 Day 25 | 2021-01-16 | SAT | xml설정을 자바파일에서 설정하는방법과 AOP에 대한것을 알아봤다. |
 Day 26 | 2021-01-17 | SUN | 프록시를 이용해서 사용자관점과 개발자관점을 나누는법을 배웠다. |
 Day 27 | 2021-01-19 | TUE | 스프링 AOP을 xml파일에 적용하고, around,before advice를 배웠다. |
+Day 28 | 2021-01-20 | WED | afterreturnning,throwing advice,pointcut,weaving,joinpoint,advisor을 배웠다. |
 
 > 기초부터해서 도움이 안될까 걱정했는데 간간히 학원에서 배우지않은것도 알려주었다.
 
