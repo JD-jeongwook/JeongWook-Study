@@ -41,6 +41,7 @@ Day 25 | 21/01/16 | SAT | xml설정을 자바파일에서 설정하는방법과 
 Day 26 | 21/01/17 | SUN | 프록시를 이용해서 사용자관점과 개발자관점을 나누는법을 배웠다. |
 Day 27 | 21/01/19 | TUE | 스프링 AOP을 xml파일에 적용하고, around,before advice를 배웠다. |
 Day 28 | 21/01/20 | WED | afterreturnning,throwing advice 와 pointcut,weaving,joinpoint,advisor을 배웠다. |
+Day 29 | 21/01/21 | THU | advisor의 간소화와 Spring MVC 공부를 시작했다. |
 
 > 기초부터해서 도움이 안될까 걱정했는데 간간히 학원에서 배우지않은것도 알려주었다.
 
