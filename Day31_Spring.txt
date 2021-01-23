@@ -1,0 +1,58 @@
+유튜브 강의 7강 - View 페이지를 위한 위치
+
+지난 시간에 jsp 를 넘겨주기위해 <url-pattern>/*</url-pattern> 에서 *을 빼서 실행시켰다.
+
+Controller와 View가 분리돼있을경우 사용자 요청이왔을때 View를 따로 요청하는것이 아닌
+무조건 Controller만 요청하게 해야한다.
+
+그래서 View 페이지를 사용자가 요청할수 없게 숨겨놓는 작업을 해놨다.
+사용자가 직접 요청을 할수없는 영역인 WEB-INF 폴더에 페이지를 숨겨놓는것이다.
+
+프로젝트 --> src --> main --> webapp --> WEB-INF --> view폴더 생성 --> index.jsp 이동
+
+지난 시간에 Controller  java파일에서 mv의 경로를 
+mv.setViewName("index.jsp"); 로 호출했다면 이번엔 WEB-INF 안에 숨겨놨기 때문에 경로를 모두 적어주어야한다.
+mv.setViewName("/WEB-INF/view/index.jsp"); 로 변경.
+( 다음시간엔 해당 코드를 줄이는 작업을 해볼것이다. )
+
+controller 를 실행할때 url에 프로젝트 이름이 들어간다.
+ex ) http://localhost:8080/ 프로젝트 이름 == webprj /index 
+해당 프로젝트의 컨텍스트 값을 지워주려한다.
+
+프로젝트 우클릭 --> Properties --> Web Project Setting --> Context root 를 프로젝트 명에서 / 로 바꿔준다.
+
+유튜브 강의 8강 - ViewResolver 사용하기
+
+지난 시간에 View 페이지를 WEB-INF 안에 view 폴더안에 옮겨놨다.
+그래서 view페이지를 찾는게 조금 복잡해졌다. view를 쉽게 찾도록 도와주는 ViewResolver를 찾는방법을 배워보려한다.
+
+ModelAndView mv = new ModelAndView("/WEB-INF/view/index.jsp");
+처럼 index에 대한 컨트롤러 뿐만 아니라 앞으로 사용할 모든 컨트롤러에 저렇게 view페이지를 찾는다면
+불편함이 있을것이다.
+
+그래서 "/WEB-INF/view/ .jsp"를 컨트롤러에서 빼주는 작업을 할것이다.
+그것을 도와주는게 ViewResolver고, 그것이 하는 역할은
+ModelAndView mv = new ModelAndView("index");
+return mv;
+
+로 index가 반환되면, index의 앞뒤에 각각 /WEB-INF/view/ 와 .jsp를 붙여주는 역할을 한다.
+ViewResolver는 지난시간에 만들어준 dispatcher-servlet.xml 파일에 설정해준다.
+
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+    	<property name="prefix" value="/WEB-INF/view/"/>
+    	<!-- InternalResourceViewResolver 클래스 안에 setPrefix("/WEB-INF/view/") 와 같다.url 호출을 받았을때 앞에 value값을 넣어준다.-->	
+
+    	<property name="suffix" value=".jsp"/>
+    	<!-- setSuffix(".jsp")와 같다. url 호출을 받았을때 뒤에 value값을 넣어준다.-->
+    </bean>
+
+해당 bean을 추가해준다.
+
+유튜브 강의 9강 - HTML 파일 설정하기
+
+www.newlecture.com 사이트에서 강사님이 미리 만들어준 html폴더를 하나 다운로드 받아서
+index.html 내용을 복사해서 미리만들어둔 index.jsp 에 붙여넣기한다.
+그리고 필요한 images css js 폴더를 webapp 폴더로 빼준다.
+그리고 index.jsp를 실행시키게되면, jsp 내용은 잘 나오지만 css는 깨져 있을것이다.
+
+다음시간에는 css와 images가 적용이 되지않는 이유를 파악해서 해결하는 시간인것같다.
