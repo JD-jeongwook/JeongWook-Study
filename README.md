@@ -44,6 +44,7 @@ Day 28 | 21/01/20 | WED | afterreturnning,throwing advice 와 pointcut,weaving,j
 Day 29 | 21/01/21 | THU | advisor의 간소화와 Spring MVC 공부를 시작했다. |
 Day 30 | 21/01/22 | FRI | Spring 으로 Dispatcher-Servlet 설정과 Controller 사용법을 배웠다. |
 Day 31 | 21/01/23 | SAT | View 페이지를 숨기는 작업과 ViewResolver로 ModelAndView 간편설정을 배웠다. |
+Day 32 | 21/01/25 | MON | image,css,js 등 정적파일을 spring에서 서비스하는 방법과 jsp url호출을 배웠다. |
 
 > 기초부터해서 도움이 안될까 걱정했는데 간간히 학원에서 배우지않은것도 알려주었다.
 
