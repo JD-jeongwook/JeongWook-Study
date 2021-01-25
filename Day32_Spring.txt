@@ -1,0 +1,100 @@
+유튜브 강의 10강 - 정적 파일 서비스하기
+
+지난시간엔 페이지에서 이미지를 띄울수없었다. 이번시간에는 이미지를 띄우는것을 배울것같다.
+
+<img src="/images/logo.png" alt="뉴렉처 온라인" /> 지난시간에 띄우려 했던 이미지이다.
+하지만 해당 이미지를 찾을수가없다 왜냐하면 스프링이 정적인 파일을 제공하지못하게 막아놨기 때문이다.
+
+web.xml 파일의
+<url-pattern>/</url-pattern> / 와 /* 의 차이는
+
+/* 는 jsp포함 모든 정적파일을 막는것을 의미하고, / 는 jsp를 제와한 정적파일을 막는것을 의미한다.
+
+그것을 사용하기 위해서 
+<mvc:resources location="/images/" mapping="/images/**" />
+
+mapping="/images/** = 사용자가 images로 시작하는 어떠한것을 요청을 한다.
+
+location="/images/" = 해당 디렉토리에서 찾아보겠다.
+
+하지만 이렇게 하나하나 만들면 images 폴더 뿐만아니라 js폴더, css폴더도 지정해주어야 할것이다.
+그렇기 때문에 사용자 요청을 받을 resource폴더를 하나 만들어서 요청폴더를 모두 넣은다음
+
+<mvc:resources location="/resource/" mapping="/resource/**" />
+
+처럼 설정을 해서 resource 로 통합을 시켜준다.
+해당 코드를 dispatcher-servlet.xml 파일에 넣어준다.
+하지만 mvc: 를 사용하기 위해선 beans 와 같이 스케마를 추가해주어야한다.
+
+xmlns:mvc="http://www.springframework.org/schema/mvc" 추가
+
+xsi:schemaLocation 에 추가
+http://www.springframework.org/schema/mvc
+https://www.springframework.org/schema/mvc/spring-mvc.xsd
+
+위 코드의 http://www.springframework.org/schema/mvc에 해당되는것은 아래 코드의 schema에 해당 되는것이고,
+해당 schema를 식별하기 위한 namespace가 mvc이다.
+
+그다음 webapp 폴더 안에 resource 폴더를 하나 만들고 거기다 이미지 하나를 추가해주었다.
+아까는 이미지파일을 실행 할때 정적파일을 제공못하는 스프링에서 오류를 냈지만
+위의 설정을 해준다음, resource 폴더 안에 이미지를 실행시키면 정상적으로 작동이 된다.
+
+하지만 이미지 파일을 호출할때마다 <img src="/resource/images/..." 처럼 매번 resource를 호출하면
+비효율적이라서 요즘은 <mvc:resources location="/static/" mapping="/**"/>
+처럼 static 폴더에 정적파일을 몰아넣고 쓴다고한다.
+( mapping 이 /resource/** 에서 /** 로 바뀜 )
+
+기존에 이미지파일을 실행시킬때 url 주소가
+http://localhost:8080/resource/images/acorn.png 였다면,
+static의 mapping을 /** 로 해주었기 때문에
+
+http://localhost:8080/images/acorn.png 처럼 줄여사용할 수 있다.
+
+jsp파일에서 이미지 호출을 할때에도
+  <img src="/resource/images/logo.png" alt="뉴렉처 온라인" /> -->   <img src="/images/logo.png" alt="뉴렉처 온라인" /> 처럼 간소화 됐다.
+
+========================================================================
+
+유튜브 강의 11강 - 공지사항 컨트롤러 추가하기
+
+
+저번에 html폴더 ( static폴더로 변경한것 ) 안에 notice 폴더안에 공지사항 html파일이 2개가 있다.
+해당 html파일을 jsp로 바꿔서 서비스해보겠다.
+
+우선 html파일을 view 폴더안에 notice 폴더를 하나 생성해준후
+같은 이름으로 jsp파일을 만들어서 복사해준다.
+
+그 다음 java폴더 안에 있는 controller 패키지에 controller.notice로 패키지 하나를 추가해준다.
+그리고 ListController.java 파일을 하나 생성해준다.
+
+그리고 지난시간에 IndexController 에 작업한것과같이
+
+public class ListController implements Controller {
+
+	@Override
+	public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		ModelAndView mv = new ModelAndView("notice/list");
+//		index와 다르게 list의 경로는 WEB-INF/view/notice/list.jsp 이기 때문에
+//		기본설정 WEB-INF/view/ 와 .jsp 를 제외한 notice/list 로 지정해주어야한다.
+
+		return mv;
+	}
+
+처럼 코딩한다. DetailController도 마찬가지로 만들어준다.
+그 다음 dispatcher-servlet.xml 파일에서
+
+    <bean id="/notice/list" class="com.newlecture.web.controller.notice.ListController"/>
+    <bean id="/notice/detail" class="com.newlecture.web.controller.notice.DetailController"/>
+
+index와 마찬가지로 bean을 생성해준다.
+
+그 다음 index를 실행시키고 공지사항을 가게되면 공지사항 창이 뜰것이다.
+하지만 url 을 보게되면 http://localhost:8080/notice/list.html 로
+http://localhost:8080/notice/list 로 나와야 할것이 잘못나오고있다.
+
+즉 컨트롤러로 요청한것이아닌, list.html로 요청한것이다.
+
+왜냐하면 index.jsp 파일에서 주소 요청을
+<a href="/notice/list.html"> 로 했기 때문에 
+<mvc:resources location="/static/" mapping="/**"/> 여기 정적파일 호출에 걸리게 된것이다.
+jsp 파일 호출은 주소요청에 .html을 뺀 <a href="/notice/list"> 로 해주어야한다.
