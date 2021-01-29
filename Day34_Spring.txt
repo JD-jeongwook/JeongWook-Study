@@ -1,0 +1,109 @@
+유튜브 강의 15강 - Tiles 지시서 작성하기
+
+ apache.org 사이트를 가보면 맨밑에 라이브러리를 볼 수 있다.
+하지만 그곳에 있어야할 Tiles 가 없는것을 볼 수 있다.
+
+tiles.apache.org 로 직접 tiles 를 찾아보면 2017 - 11 - 7 부로 tiles를 서비스하지 않는것을 볼 수 있다.
+그 이유는 페이지를 만드는 작업이 백엔드에서 프론트엔드로 점점 옮겨가다보니,
+더이상 백엔드에서 페이지를 나누는 작업이 발전할필요가 없어졌기 때문이다.
+
+그래도 Tiles를 사용하는 방법이있다.
+
+tiles.apache.org --> Documentation 클릭 --> Tiles 3.0.x 클릭 --> Tutorial 클릭 --> Creating Tiles Pages 클릭
+
+밑으로 내리다 2번째 타일에 있는 
+
+<!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
+       "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+<tiles-definitions>
+  <definition name="myapp.homepage" template="/layouts/classic.jsp"> -- 레이아웃 jsp 파일 설정
+
+    <put-attribute name="title" value="Tiles tutorial homepage" /> -- 아래 코드들은 분리해둔 나머지 코드들
+    <put-attribute name="header" value="/tiles/banner.jsp" />
+    <put-attribute name="menu" value="/tiles/common_menu.jsp" />
+    <put-attribute name="body" value="/tiles/home_body.jsp" />
+    <put-attribute name="footer" value="/tiles/credits.jsp" />
+  </definition>
+</tiles-definitions>
+
+라는 코드를 가져온다.
+
+해당 타일 위에있는 문구를 보면 /WEB-INF/tiles.xml 에 해당 코드를 입력하라는 내용이 있다.
+프로젝트에서 알맞게 적용을 해주자.
+
+<definition name="myapp.homepage" template="/layouts/classic.jsp">
+
+myapp.homepage 가 컨트롤러가 반환할 이름이 될 것이다.
+
+ListContoller 에서
+
+ModelAndView mv = new ModelAndView("notice/list"); 의 notice/list 를 notice.list 로 바꿔준다.
+
+그리고 tiles의 definition의 name을 notice.list로 맞춰준다.
+하지만 이렇게 되면 notice.detail도 만들어주고 앞으로 컨트롤러가 늘어날때마다 definition이 늘어날것이다.
+
+해당부분을 통합하는 방법은 다다음 시간에 배운다고 한다.
+
+위에서 가져온 tiles 의 기본코드를 내 프로젝트에 맞게 변경하면
+
+<tiles-definitions>
+  <definition name="notice.list" template="/WEB-INF/view/customer/inc/layout.jsp">
+    <put-attribute name="title" value="Tiles tutorial homepage" />
+    <put-attribute name="header" value="/WEB-INF/view/inc/header.jsp" />
+    <put-attribute name="visual" value="/WEB-INF/view/customer/inc/visual.jsp" />
+    <put-attribute name="aside" value="/WEB-INF/view/customer/inc/aside.jsp" />
+    <put-attribute name="body" value="/WEB-INF/view/customer/notice/list.jsp" />
+    <put-attribute name="footer" value="/WEB-INF/view/inc/footer.jsp" />
+  </definition>
+  <definition name="notice.detail" template="/WEB-INF/view/customer/inc/layout.jsp">
+    <put-attribute name="title" value="Tiles tutorial homepage" />
+    <put-attribute name="header" value="/WEB-INF/view/inc/header.jsp" />
+    <put-attribute name="visual" value="/WEB-INF/view/customer/inc/visual.jsp" />
+    <put-attribute name="aside" value="/WEB-INF/view/customer/inc/aside.jsp" />
+    <put-attribute name="body" value="/WEB-INF/view/customer/notice/detail.jsp" />
+    <put-attribute name="footer" value="/WEB-INF/view/inc/footer.jsp" />
+  </definition>
+</tiles-definitions>
+
+이렇게 된다. 하지만 이렇게 했을때 경로가 틀릴수도 있다. 나중에 편하게 하는방법을 배운다고한다.
+다음 시간에는 해당 코드들을 조합했을때 어느 위치에 가야하는지 설정을 하는것을 배운다.
+
+유튜브 강의 16강 - 레이아웃 페이지 만들기와 Tiles 라이브러리 설정하기
+
+Constomer --> inc --> layout.jsp 로 와서 각각에 맞는 jsp파일을 끼워줘야한다.
+그러기위해선 taglib 로 tiles 를 추가해주어야하는데, 여기서 tiles를 사용하기 위해선
+maven 으로 tiles 도 추가해줘야한다.
+
+유튜브에서는 Dependencies 에서 add 를 통해 가져오지만
+나는 왜 안나오는지 tiles를 검색해도 나오지않아서 maven사이트에서 받아서 직접 추가해주었다.
+( Grobal Repositories 의 central 도 Rebuild 해주었는데 나오지않는다. )
+
+<!-- https://mvnrepository.com/artifact/org.apache.tiles/tiles-jsp -->
+<dependency>
+    <groupId>org.apache.tiles</groupId>
+    <artifactId>tiles-jsp</artifactId>
+    <version>3.0.8</version>
+</dependency>
+
+xml파일에 tiles를 추가하면
+layout.jsp 에 taglib 를 통해 tiles를 넣을수있다.
+
+<%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
+
+이제 각 부분에 맞는 jsp파일을 꽂아주는 일만남았다.
+
+<put-attribute name="header" value="/WEB-INF/view/inc/header.jsp" />
+tiles.xml 파일에서 적용한 header.jsp의 name 인 header를 꽂기 위해서는 
+
+<tiles:insertAttribute name="header" /> 이같은 코드를 header위치에 놓아주면된다.
+header 뿐만아니라 visual , aside 같은것도 알맞은위치에 같은코드로 name만 바꿔서 맞게 꽂아주면된다.
+
+그렇게 되면 tiles.xml에
+    <put-attribute name="title" value="Tiles tutorial homepage" /> 이와 같은 코드가 남는다.
+
+이것은 해당 layout에 들어갈 String 문자열을 title이라는 이름으로 쓴것이다.
+
+    <put-attribute name="title" value="공지사항" /> 문자열을 변경하고
+layout.jsp 에 title 부분에 
+<title><tiles:getAsString name="title" /></title> 으로 tiles 파일의 title이라는 이름을 가진 문자열을 가져온다.
