@@ -1,0 +1,53 @@
+유튜브 강의 17강 - Tiles ViewResolver 설정하기
+
+지난 시간에 레이아웃 페이지에서 각각 위치에맞는 Tiles를 꽂아넣어주었다.
+
+dispatcher-servlet.xml 파일에서 Resolver 설정을 추가해줘야한다.
+
+저번에 만들어준 Resolver위에
+
+	<bean class="org.springframework.web.servlet.view.UrlBasedViewResolver">
+		<property name="viewClass" 
+			value="org.springframework.web.servlet.view.tiles3.TilesView"/>
+		<property name="order" value="1"></property>
+		<!-- Resolver의 우선순의를 정해주는 property가 order이다. -->
+	</bean>
+	
+	<bean
+		class="org.springframework.web.servlet.view.tiles3.TilesConfigurer">
+		<property name="definitions" value="/WEB-INF/tiles.xml" />
+	</bean>
+
+다음과 같은 코드를 입력해준다.
+그다음 프로그램을 실행시키면 jstl에 대한 라이브러리가 없다고 오류가뜬다
+pom.xml에서 해당 dependency를 추가해주자.
+( 이것도 add로 뜨지않아서 직접 Maven Repository에서 가져왔다. )
+
+다시 실행시키면 notice/list 에 각각 부분에 맞는 header,aside,footer,visual 등이 알맞게 들어간것을 볼 수 있다.
+
+유튜브 강의 18강 - Tiles 설정에 Wildcard 사용하기
+
+저번에 만든 tiles.xml 파일의 설정은 페이지 추가를 할때마다 definition을 추가해야하는 비효율적인 모습을 볼수있다.
+
+  <definition name="notice.list" template="/WEB-INF/view/customer/inc/layout.jsp">
+    <put-attribute name="title" value="공지사항" />
+    <put-attribute name="header" value="/WEB-INF/view/inc/header.jsp" />
+    <put-attribute name="visual" value="/WEB-INF/view/customer/inc/visual.jsp" />
+    <put-attribute name="aside" value="/WEB-INF/view/customer/inc/aside.jsp" />
+    <put-attribute name="body" value="/WEB-INF/view/customer/notice/list.jsp" />
+    <put-attribute name="footer" value="/WEB-INF/view/inc/footer.jsp" />
+  </definition>
+
+위의 tiles.xml 파일 코드를
+
+  <definition name="notice.*" template="/WEB-INF/view/customer/inc/layout.jsp">
+    <put-attribute name="title" value="공지사항" />
+    <put-attribute name="header" value="/WEB-INF/view/inc/header.jsp" />
+    <put-attribute name="visual" value="/WEB-INF/view/customer/inc/visual.jsp" />
+    <put-attribute name="aside" value="/WEB-INF/view/customer/inc/aside.jsp" />
+    <put-attribute name="body" value="/WEB-INF/view/customer/notice/{1}.jsp" />
+    <put-attribute name="footer" value="/WEB-INF/view/inc/footer.jsp" />
+
+  </definition> 아래와 같이 definition의 name과 main부분이 있는 "body"의 value값만 바꿔주었다.
+
+notice.* 은 notice 밑의 폴더로 오는 모든것이고, * 부분에 오는것이 body의 value인 {1} 부분에 와일드카드로 들어오는것이다.
