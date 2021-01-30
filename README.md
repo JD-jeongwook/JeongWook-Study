@@ -47,6 +47,7 @@ Day 31 | 21/01/23 | SAT | View 페이지를 숨기는 작업과 ViewResolver로 
 Day 32 | 21/01/25 | MON | image,css,js 등 정적파일을 spring에서 서비스하는 방법과 jsp url호출을 배웠다. |
 Day 33 | 21/01/28 | THU | header , footer ,aside 같은 프로젝트에 공통되는 부분을 분리해주었다. |
 Day 34 | 21/01/29 | FRI | tiles를 사용해서 저번시간에 분리한 코드를 합치는방법을 배웠다. |
+Day 35 | 21/01/30 | SAT | tiles Resolver를 추가하는방법과, wild card 사용법을 배웠다. |
 
 > 기초부터해서 도움이 안될까 걱정했는데 간간히 학원에서 배우지않은것도 알려주었다.
 
